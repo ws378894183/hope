@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds"
+	debug="false">
+	<jmxConfigurator />
+
+	<property name="APP_NAME" value="validation" />
+	<property name="APPLOG_PATH" value="../log" />
+	<conversionRule conversionWord="clr"
+		converterClass="org.springframework.boot.logging.logback.ColorConverter" />
+	<conversionRule conversionWord="wex"
+		converterClass="org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter" />
+	<conversionRule conversionWord="wEx"
+		converterClass="org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter" />
+
+	<appender name="CONSOLE"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d %5p %clr(${PID:- }){magenta} %clr(---){faint} [%X{trace}] %clr([%25.25t]){faint} %clr(%-40.40logger{39}){cyan}:%clr(%-5L){faint} - %m%n
+			</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="DailyRollingFileAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${APPLOG_PATH}/${APP_NAME}.log</File>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<!-- <FileNamePattern>${APPLOG_PATH}/${APP_NAME}.%d{yyyy-MM-dd}.log
+			</FileNamePattern> -->
+			 <FileNamePattern>${APPLOG_PATH}/${APP_NAME}.%d{yyyy-MM-dd}-%i.log
+            </FileNamePattern>
+			
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+			<maxFileSize>100MB</maxFileSize>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %5p %clr(${PID:- }){magenta} %clr(---){faint} [%X{trace}] %clr([%25.25t]){faint} %clr(%-40.40logger{39}){cyan}:%clr(%-5L){faint} - %m%n
+			</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="DailyRollingFileErrorAppender"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${APPLOG_PATH}/${APP_NAME}-error.log</File>
+		<rollingPolicy
+			class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<!-- <FileNamePattern>${APPLOG_PATH}/${APP_NAME}-error.%d{yyyy-MM-dd}.log
+			</FileNamePattern> -->
+			<FileNamePattern>${APPLOG_PATH}/${APP_NAME}-error.%d{yyyy-MM-dd}-%i.log
+            </FileNamePattern>
+			
+			<!-- keep 30 days' worth of history -->
+			<maxHistory>30</maxHistory>
+			<maxFileSize>100MB</maxFileSize>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d %5p %clr(${PID:- }){magenta} %clr(---){faint} [%X{trace}] %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan}:%clr(%-5L){faint} - %m%n
+			</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+			<level>ERROR</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+	</appender>
+
+	<!-- 自定义日志 -->
+	<logger name="org.springframework" level="INFO" />
+	<logger name="org.snmp4j" level="DEBUG" />
+	<!-- <logger name="org.apache.kafka" level="DEBUG" /> -->
+	<root level="INFO">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="DailyRollingFileAppender" />
+		<appender-ref ref="DailyRollingFileErrorAppender" />
+	</root>
+</configuration>
