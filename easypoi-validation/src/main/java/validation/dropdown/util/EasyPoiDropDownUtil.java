@@ -100,7 +100,7 @@ public class EasyPoiDropDownUtil {
             }
         }
         //将hidden sheet设置为隐藏 调试时可以注释掉
-        workbook.setSheetHidden(workbook.getSheetIndex("hidden"), true);
+        workbook.setSheetHidden(workbook.getSheetIndex(hideSheetName), true);
     }
 
     public static String getColumn(int col) {
